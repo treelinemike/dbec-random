@@ -14,7 +14,7 @@
 close all; clear all; clc;
 
 % load data from Excel
-mydata = readtable('fourier_cmm_test_bhc.xlsx');
+mydata = readtable('fourier_cmm_test.xlsx');
 theta = mydata.angle_degrees * pi/180;
 y = mydata.deflection;
 
@@ -52,7 +52,7 @@ Y = (1/N)*fftshift(fft(y_rs));
 
 % plot original data
 figure;
-subplot(3,1,1);
+subplot(2,1,1);
 hold on; grid on;
 plot(theta_uw*180/pi,y,'.','MarkerSize',5,'Color',[0.0 0.0 0.8]);
 plot(theta_rs*180/pi,y_rs,'o','MarkerSize',3','Color',[0.8 0.0 0.0]);
@@ -61,17 +61,17 @@ xlabel('\bfAngle [deg]');
 ylabel('\bfDeflection');
 
 % plot FFT
-ax = subplot(3,1,2);
+ax = subplot(2,1,2);
 hold on; grid on;
 stem(freq,2*abs(Y),'LineWidth',1.6,'Color',[0.0 0.0 0.8],'MarkerSize',2);  % https://www.mathworks.com/matlabcentral/answers/84141-why-fft-function-returns-amplitude-divided-by-2
 xlim([0, max(freq)]);
 xlabel('\bf''Frequency'' of Component Sine Wave');
 ylabel('\bfComponent Weight');
 
-ax(end+1) = subplot(3,1,3);
-hold on; grid on;
-stem(freq,real(Y),'-','LineWidth',1.6,'Color',[0.0 0.0 0.8],'MarkerSize',2);
-stem(freq,imag(Y),'-','LineWidth',1.6,'Color',[0.8 0.0 0.0],'MarkerSize',2);
-legend('Real','Imag');
-xlim([0, max(freq)]);
-linkaxes(ax,'x');
+% ax(end+1) = subplot(3,1,3);
+% hold on; grid on;
+% stem(freq,real(Y),'-','LineWidth',1.6,'Color',[0.0 0.0 0.8],'MarkerSize',2);
+% stem(freq,imag(Y),'-','LineWidth',1.6,'Color',[0.8 0.0 0.0],'MarkerSize',2);
+% legend('Real','Imag');
+% xlim([0, max(freq)]);
+% linkaxes(ax,'x');
