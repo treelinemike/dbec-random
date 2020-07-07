@@ -4,7 +4,15 @@
 % Identify the WEIGHTS: A, B, C, etc.
 % as well as the 'FREQUENCIES': a, b, c, etc.
 %
-% Note: sampling at a smaller angular step size (smaller angle increments from CMM)
+% Note: This is not a true reconstruction of the signal unless the input
+% really is a series of unshifted sine terms. We look at only the
+% magnitude of the Fourier transform, and thus get an accurate picture of
+% the frequency content but have no information about phase. This could be
+% modified to actually compute the Fourier sine series coefficients
+% (coefficients of the sine and cosine terms) - then the terms with the
+% same frequencies could be combined into shifted sine (or cosine) terms.
+%
+% Also note: sampling at a smaller angular step size (smaller angle increments from CMM)
 % will allow for more precise discimination between 'frequencies'
 %
 % Author: M. Kokko
@@ -14,7 +22,7 @@
 close all; clear all; clc;
 
 % options
-excel_filename = 'fourier_cmm_test.xlsx';  % must have column headings 'angle_degrees' and 'deflection'
+excel_filename = 'fourier_cmm_test_bhc_2.xlsx';  % must have column headings 'angle_degrees' and 'deflection'
 doShowComplexFFT = 0;  % 0: don't show complex components of FFT; 1: show complex components of FFT
 
 % load data from Excel
@@ -26,9 +34,6 @@ y = mydata.deflection;
 % theta = 0:0.05:2*pi;
 % sigma = 0.05;
 % y = 2*sin(theta+ pi/6); %+ 1.2*sin(3*theta) + sigma*randn(1,length(theta));
-
-% center (de-mean) data
-y = y - mean(y);
 
 % correct jumping when theta wraps
 % this may make the raw plots display differently than Excel
@@ -45,6 +50,11 @@ delta_x = mean(diff(theta_uw));
 % theta_rs
 theta_rs = theta_uw(1) + (0:N-1)*delta_x;
 y_rs = interp1(theta_uw,y,theta_rs,'linear','extrap');
+
+% center (de-mean) data
+rs_mean = mean(y_rs);
+y_rs = y_rs - rs_mean;
+y = y - rs_mean;
 
 % compute sampling frequency and frequency vector
 delta_x_rs = mean(diff(theta_rs)); % this should be just delta_x!
