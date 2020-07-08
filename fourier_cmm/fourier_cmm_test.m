@@ -22,7 +22,7 @@
 close all; clear all; clc;
 
 % options
-excel_filename = 'fourier_cmm_test_bhc_2.xlsx';  % must have column headings 'angle_degrees' and 'deflection'
+excel_filename = 'fourier_cmm_test.xlsx';  % must have column headings 'angle_degrees' and 'deflection'
 doShowComplexFFT = 0;  % 0: don't show complex components of FFT; 1: show complex components of FFT
 
 % load data from Excel
@@ -30,8 +30,8 @@ mydata = readtable(excel_filename);
 theta = mydata.angle_degrees * pi/180;
 y = mydata.deflection;
 
-% alternatively we could synthesize some toy data
-% theta = 0:0.05:2*pi;
+% % alternatively we could synthesize some toy data
+% theta = 0:0.1:2*pi;
 % sigma = 0.05;
 % y = 2*sin(theta+ pi/6); %+ 1.2*sin(3*theta) + sigma*randn(1,length(theta));
 
@@ -59,7 +59,15 @@ y = y - rs_mean;
 % compute sampling frequency and frequency vector
 delta_x_rs = mean(diff(theta_rs)); % this should be just delta_x!
 fs = 1/delta_x_rs;
-freq = 2*pi*(1/(2*pi))*(-floor(N/2):1:ceil(N/2)-1);  % note: 2*pi cancels because we're scaling the x axis to show the coefficient 'a' in sin(a*theta)
+% freq = 2*pi*(1/(2*pi))*(-floor(N/2):1:ceil(N/2)-1);  % note: 2*pi cancels because we're scaling the x axis to show the coefficient 'a' in sin(a*theta)
+
+% the freq vector above is easily interpreted but not quite correct; use
+% this instead...
+% the initial 2*pi factor scales the output so it is in "rad/s" rather than "Hz" (if x axis were in seconds; unfortunately it's in radians here which is confusing); 
+% the other term is (fs/(N-1)) = (1/T) = (1/(max(theta_rs)-min(theta_rs)))
+% if we sampled all the way around back to 2*pi the factors of 2*pi would
+% cancel... they probably won't quite in practice
+freq = 2*pi*(fs/(N-1))*(-floor(N/2):1:ceil(N/2)-1);
 
 % compute FFT
 Y = (1/N)*fftshift(fft(y_rs));
