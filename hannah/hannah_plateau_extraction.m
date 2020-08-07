@@ -52,7 +52,7 @@ platCenterIdx = floor((platStartIdx+platEndIdx)/2);
 platData = nan(length(platStartIdx),2);
 for platIdx = 1:length(platStartIdx)
     platData(platIdx,1) = t(platCenterIdx(platIdx));
-    platData(platIdx,2) = mean(y(platStartIdx(platIdx):platEndIdx(platIdx)));
+    platData(platIdx,2) = mean(y_filt(platStartIdx(platIdx):platEndIdx(platIdx)));
 end
 
 % show plateau data
@@ -68,10 +68,14 @@ plot(t,y,'-','Color',[0.0 0.0 0.8],'LineWidth',1.6);
 plot(t,y_filt,'-','Color',[0.8 0.0 0.0],'LineWidth',1.6);
 plot(t,y_mavg,'-','Color',[0.8 0.0 0.8],'LineWidth',1.6);
 % plot(t(platCenterIdx),y(platCenterIdx),'.','MarkerSize',50,'Color',[0.8 0 0]);
-plot(platData(:,1),platData(:,2),'.','MarkerSize',50,'Color',[0.8 0 0]);
+plot(platData(:,1),platData(:,2),'.','MarkerSize',50,'Color',[0.8 0.0 0.0]);
+ylabel('\bfLoad Cell Voltage');
+legend('Raw','Low Pass', 'Moving Average','Plateau Centers');
 
 ax(end+1) = subplot(3,1,3);
 hold on; grid on;
-plot(t,dydt);
-plot(t(pk_locs),pks,'.','Color',[0.8 0 0],'MarkerSize',10);
+plot(t,dydt,'Color',[0.8 0.0 0.8]);
+xlabel('\bfTime [sec]');
+ylabel('\bfdV/dt')
+
 linkaxes(ax,'x');
