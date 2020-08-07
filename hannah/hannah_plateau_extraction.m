@@ -15,7 +15,7 @@ deriv_threshold  = 1.5e-4;   % max allowable absolute derivative value in a plat
 min_plat_width = 5e3;        % minimum plateau width (in samples)
 
 % load data from load cell
-excel_filename = 'CouchBalanceTest-2.csv';  % must have column headings 'angle_degrees' and 'deflection'
+excel_filename = 'CouchBalanceTest-2.csv';
 mydata = readtable(excel_filename,'HeaderLines',9);
 t = mydata.Var1;
 y = mydata.Var2;
