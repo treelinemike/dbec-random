@@ -1,5 +1,5 @@
-% sample script to find plateaus in load cell data
-% brute force approach, requires tuning, may not be generalizable!
+% Very simple script to find plateaus in load cell data
+% This is a brute force approach, it requires tuning and may not be generalizable!
 %
 % Author: M. Kokko
 % Date:   06-Aug-2020
@@ -36,9 +36,13 @@ y_mavg = movmean(y_filt,mavg_window);
 % take derviative... remember derviatives make signals uglier
 dydt = abs(gradient(y_mavg,t));
 
-% find the plateaus as the areas between 
+% find the plateaus as the areas where derivative is below some threshold 
 lowvals = (dydt < deriv_threshold);
+
+% now find the indices of all points that are NOT in plateaus
 highValIdx = [find(lowvals == 0);length(lowvals)];  % note: added end of data here in case that is the edge of a plateau
+
+% plateaus are in locations where there are lots of points between points that are NOT in plateaus 
 platStarts = find(diff(highValIdx) > min_plat_width);
 platStartIdx = highValIdx(platStarts);
 platEndIdx = highValIdx(platStarts+1);
